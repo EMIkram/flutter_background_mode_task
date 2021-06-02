@@ -69,7 +69,7 @@ int count=0;
     {
 
       // locally.schedule(title: "title.text", message: "message.text", duration: Duration(seconds: 5));
-     await  Future.delayed(Duration(seconds: 5));
+     await  Future.delayed(Duration(minutes: 2));
      http.Response response= await  http.get(Uri.parse("https://www.json-generator.com/api/json/get/ceFuwvHigi"));
      if(response.statusCode==200)
      {
