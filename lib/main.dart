@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:locally/locally.dart';
+import 'package:http/http.dart' as http;
 void main() {
   runApp(MyApp());
 }
@@ -47,7 +50,39 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+@override
+  void initState() {
+  startNotificationService();
+    super.initState();
+  }
 
+  startNotificationService() async {
+    Locally locally = Locally(
+      context: context,
+      payload: 'test',
+      pageRoute: MaterialPageRoute(builder: (context) => MyHomePage(title: "notification opened",)),
+      appIcon: 'mipmap/ic_launcher',
+    );
+int count=0;
+
+    while(true)
+    {
+
+      // locally.schedule(title: "title.text", message: "message.text", duration: Duration(seconds: 5));
+     await  Future.delayed(Duration(seconds: 5));
+     http.Response response= await  http.get(Uri.parse("https://www.json-generator.com/api/json/get/ceFuwvHigi"));
+     if(response.statusCode==200)
+     {
+       print(jsonDecode(response.body)[count%5]["favoriteFruit"]);
+       locally.show(title: jsonDecode(response.body)[count%5]["favoriteFruit"], message: "notification count:${count++}  \n index ${jsonDecode(response.body)[count%5]["index"]}");
+     }
+     else
+     {
+       print(response.body);
+       locally.show(title: "notification coun:$count", message: "error status code:${response.statusCode}");
+     }
+    }
+  }
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
